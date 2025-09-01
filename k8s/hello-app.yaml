@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-${VERSION}
+  labels:
+    app: hello
+    version: ${VERSION}
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: hello
+      version: ${VERSION}
+  template:
+    metadata:
+      labels:
+        app: hello
+        version: ${VERSION}
+    spec:
+      containers:
+        - name: hello
+          image: hello:${IMAGE_TAG}
+          ports:
+            - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello
+spec:
+  selector:
+    app: hello
+  ports:
+    - port: 80
+      targetPort: 80

@@ -1,0 +1,33 @@
+name: Deploy to Kind
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Deployment version (e.g., v1, v2)"
+        required: true
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set version
+        run: |
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            VERSION=${{ github.event.inputs.version }}
+          else
+            VERSION=${{ github.ref_name }}
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Make deploy script executable
+        run: chmod +x devops/deploy.sh
+
+      - name: Run deploy script
+        run: devops/deploy.sh $VERSION

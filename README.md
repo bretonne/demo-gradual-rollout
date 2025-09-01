@@ -69,8 +69,41 @@ You should see kiali and prometheus pods running.
   istioctl dashboard kiali
 ```
 
-# Initial Setup
-## Deploy the initial version of the application
+# Deploy
+## Deploy the application
 ```bash
-    cd devops
-    ./build-and-deploy.sh
+ devops/deploy.sh v1
+ devops/deploy.sh v1
+```
+
+
+
+
+
+
+# Optional - Set up kubernetes dashboard
+```bash
+  kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
+```
+
+### Create a service account
+```bash
+ kubectl apply -f k8s/
+```
+### Get the token
+```bash
+kubectl -n kubernetes-dashboard create token admin-user
+```
+Copy the token — you’ll need it for login.
+
+### Access the Dashboard
+
+kubectl proxy
+```bash
+kubectl proxy
+```
+
+Then open in browser:
+👉 http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+
+Log in using the token you copied.

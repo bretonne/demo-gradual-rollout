@@ -19,6 +19,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
   name: hello-dest
+  namespace: kubecon-demo
 spec:
   host: hello
   subsets:
