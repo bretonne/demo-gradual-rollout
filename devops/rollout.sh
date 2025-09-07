@@ -8,6 +8,10 @@ if [ -z "$VERSION" ]; then
   exit 1
 fi
 
+# namespace and virtualservice template (ensure defined before use)
+NAMESPACE="kubecon-demo"
+VS_TEMPLATE="k8s/istio-virtual-service-rollout.yaml"
+
 # Tag docker image with version
 docker build -t ${APP_NAME}:${VERSION} . --build-arg VERSION=${VERSION}
 kind load docker-image ${APP_NAME}:${VERSION} --name demo-cluster
@@ -33,7 +37,7 @@ apply_vs() {
 
   # generate the VirtualService manifest to a temp file so we can print it before applying
   tmpfile=$(mktemp)
-  envsubst < ${VS_TEMPLATE} > "${tmpfile}"
+  envsubst < "${VS_TEMPLATE}" > "${tmpfile}"
   sed -n '1,200p' "${tmpfile}"
 
   kubectl apply -n ${NAMESPACE} -f "${tmpfile}"
@@ -53,8 +57,8 @@ trap on_interrupt SIGINT SIGTERM
 # Start rollout: initial 10% for 30 minutes, then increment by 10% every 15 minutes
 START=10
 STEP=10
-HOLD_FIRST_SECONDS=$((3 * 60))
-HOLD_AFTER_SECONDS=$((1 * 60))
+HOLD_FIRST_SECONDS=$((60)) #seconds
+HOLD_AFTER_SECONDS=$((15))
 
 # Apply initial step
 apply_vs ${START}
