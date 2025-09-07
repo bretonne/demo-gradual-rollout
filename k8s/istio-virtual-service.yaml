@@ -5,6 +5,8 @@ metadata:
   name: hello
   namespace: kubecon-demo
 spec:
+  gateways:
+    - "hello-gateway"
   hosts:
     - "hello.local"
   http:

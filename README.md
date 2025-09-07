@@ -93,7 +93,7 @@ Forward the gateway’s HTTP port (80) to your localhost:
 kubectl port-forward -n istio-system svc/istio-ingressgateway 8080:80
 ```
 
-Keep this running in a terminal. Now your browser traffic to http://localhost:8080 will hit the Istio ingress gateway.
+Keep this running in a terminal. Now your browser traffic to http://hello.local:8080 will hit the Istio ingress gateway.
 
 
 # Optional - Set up kubernetes dashboard
