@@ -14,8 +14,8 @@ spec:
         - destination:
             host: hello
             subset: v1
-          weight: ${V1_WEIGHT}
+          weight: 100
         - destination:
             host: hello
             subset: v2
-          weight: ${V2_WEIGHT}
+          weight: 0
