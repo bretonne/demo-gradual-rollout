@@ -9,65 +9,24 @@ This project installs kind, istio, kiali.  It also needs to have Docker.
 ```bash
   brew install kind
 ```
-
 Verify kind installation
 ```bash
   kind version
 ```
 ## Create a cluster
-```bash
-  kind create cluster --name demo-cluster
-```
-
-## Set context to the new cluster
-```bash
-  kubectl cluster-info --context kind-demo-cluster
-```
-
-
-## Install Istio
-```bash
-curl -L https://istio.io/downloadIstio | sh -
-cd istio-1.*
-export PATH=$PWD/bin:$PATH
-```
-
-Verify istioctl installation
-```bash
-  istioctl version
-```
 
 ```bash
-  istioctl install --set profile=demo -y
+  devops/create-cluster.sh
 ```
 
-## Enable automatic sidecar injection for the demo namespace
+It does the following
+ - create a cluster named demo-cluster
+ - install istio
+ - create namespace
+ - Enable automatic sidecar injection for the demo namespace 
+ - Install kiali
+ - Install kubectl dashboard and create a service account
 
-Create a namespace
-```bash
-  kubectl create namespace demo
-```
-
-```bash
-kubectl label namespace demo istio-injection=enabled
-```
-
-## Install kiali
-```bash
-kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.23/samples/addons/prometheus.yaml
-kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.23/samples/addons/kiali.yaml
-```
-
-Verify kiali installation
-```bash
-  kubectl get pods -n istio-system
-```
-You should see kiali and prometheus pods running.
-
-## Access kiali dashboard
-```bash
-  istioctl dashboard kiali
-```
 
 # Deploy
 ## Deploy the application
@@ -82,6 +41,7 @@ You should see kiali and prometheus pods running.
 ```
 
 # Test the application
+
 ## Confirm Istio ingress gateway is running
 ```bash
 kubectl get pods -n istio-system
@@ -92,19 +52,22 @@ Forward the gateway’s HTTP port (80) to your localhost:
 ```bash
 kubectl port-forward -n istio-system svc/istio-ingressgateway 8080:80
 ```
+## Update /etc/hosts to map hello.local to localhost
+add the following line to /etc/hosts
+```
+127.0.0.1 hello.local
+```
 
 Keep this running in a terminal. Now your browser traffic to http://hello.local:8080 will hit the Istio ingress gateway.
 
 
-# Optional - Set up kubernetes dashboard
+
+## Access kiali dashboard
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
+  istioctl dashboard kiali
 ```
 
-### Create a service account
-```bash
- kubectl apply -f k8s/dashboard-admin.yaml
-```
+# Access kubernetes dashboard
 ### Get the token
 ```bash
 kubectl -n kubernetes-dashboard create token admin-user
@@ -112,8 +75,6 @@ kubectl -n kubernetes-dashboard create token admin-user
 Copy the token — you’ll need it for login.
 
 ### Access the Dashboard
-
-kubectl proxy
 ```bash
 kubectl proxy
 ```
