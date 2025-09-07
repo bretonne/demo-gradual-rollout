@@ -73,22 +73,37 @@ You should see kiali and prometheus pods running.
 ## Deploy the application
 ```bash
  devops/deploy.sh v1
- devops/deploy.sh v1
+ devops/deploy.sh v2
 ```
 
+## Apply Istio VirtualService for Traffic Routing
+```bash
+ kubectl apply -f k8s/istio-virtual-service-rollout.yaml
+```
 
+# Test the application
+## Confirm Istio ingress gateway is running
+```bash
+kubectl get pods -n istio-system
+```
+## Port-forward the ingress gateway
 
+Forward the gateway’s HTTP port (80) to your localhost:
+```bash
+kubectl port-forward -n istio-system svc/istio-ingressgateway 8080:80
+```
 
+Keep this running in a terminal. Now your browser traffic to http://localhost:8080 will hit the Istio ingress gateway.
 
 
 # Optional - Set up kubernetes dashboard
 ```bash
-  kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
 ```
 
 ### Create a service account
 ```bash
- kubectl apply -f k8s/
+ kubectl apply -f k8s/dashboard-admin.yaml
 ```
 ### Get the token
 ```bash
