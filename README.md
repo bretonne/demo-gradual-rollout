@@ -62,7 +62,7 @@ Keep this running in a terminal. Now your browser traffic to http://hello.local:
 
 
 
-## Access kiali dashboard
+# Access kiali dashboard
 ```bash
   istioctl dashboard kiali
 ```
@@ -83,3 +83,9 @@ Then open in browser:
 👉 http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
 
 Log in using the token you copied.
+
+# Verify Deployment Version:
+```bash
+kubectl port-forward -n kubecon-demo pod/hello-v1-xxxxx 8081:80
+```
+In browser go to http://localhost:8081 and you should see "Hello World! v1"
