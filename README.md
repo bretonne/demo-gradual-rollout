@@ -89,3 +89,13 @@ Log in using the token you copied.
 kubectl port-forward -n kubecon-demo pod/hello-v1-xxxxx 8081:80
 ```
 In browser go to http://localhost:8081 and you should see "Hello World! v1"
+
+Troubleshooting with following to bypass istio to see content of pod directly
+```bash
+kubectl exec -n kubecon-demo hello-v1-abc123 -- cat /usr/share/nginx/html/index.html
+```
+# Port-forward to a v2 pod
+kubectl port-forward -n kubecon-demo pod/hello-v2-abc123 8081:80 &
+
+# Test the v1 pod directly
+curl http://localhost:8081
