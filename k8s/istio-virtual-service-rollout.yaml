@@ -1,0 +1,21 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: hello
+  namespace: kubecon-demo
+spec:
+  hosts:
+    - "hello.local"
+  gateways:
+    - hello-gateway
+  http:
+    - route:
+        - destination:
+            host: hello
+            subset: v1
+          weight: ${V1_WEIGHT}
+        - destination:
+            host: hello
+            subset: v2
+          weight: ${V2_WEIGHT}
