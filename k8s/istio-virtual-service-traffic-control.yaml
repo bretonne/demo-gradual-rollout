@@ -14,8 +14,8 @@ spec:
         - destination:
             host: hello
             subset: v1
-          weight: 100
+          weight: 50
         - destination:
             host: hello
             subset: v2
-          weight: 0
+          weight: 50
